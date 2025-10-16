@@ -68,6 +68,9 @@ class Big5ModelLoader:
             'Agreeableness',
             'Neuroticism'
         ]
+        
+        # POS tags for feature extraction
+        self.pos_tags_of_interest = ['JJ', 'RB', 'NN', 'VB']
 
     def get_sentiment_features(self, text: str) -> np.ndarray:
         """Extract sentiment analysis features using VADER"""

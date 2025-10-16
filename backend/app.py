@@ -13,14 +13,22 @@ app = FastAPI(title="Big Five Personality Prediction API")
 # CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://localhost:5173"],  # React/Vite ports
+    allow_origins=["http://localhost:8080", "http://localhost:5173", "http://localhost:3000"],  # Lovable + Vite + React ports
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
 # Initialize model and summarizer
-model_loader = Big5ModelLoader('C:/Users/KRISHNA CHAURASIA/Downloads/Personality_ui/model/Big_5_final.json','C:/Users/KRISHNA CHAURASIA/Downloads/Personality_ui/model/lda_model.joblib','C:/Users/KRISHNA CHAURASIA/Downloads/Personality_ui/model/lda_vec.joblib')
+import os
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+MODEL_DIR = os.path.join(BASE_DIR, 'model')
+
+model_loader = Big5ModelLoader(
+    os.path.join(MODEL_DIR, 'Big_5_final.json'),
+    os.path.join(MODEL_DIR, 'lda_model.joblib'),
+    os.path.join(MODEL_DIR, 'lda_vec.joblib')
+)
 summarizer = GeminiPersonalitySummarizer()
 
 # Request/Response models
