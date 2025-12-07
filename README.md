@@ -1,73 +1,69 @@
-# Welcome to your Lovable project
+# Big Five Personality Prediction Backend
 
-## Project info
+## Setup Instructions
 
-**URL**: https://lovable.dev/projects/a551626d-1ed4-4b4d-b46a-679bf6df99cc
-
-## How can I edit this code?
-
-There are several ways of editing your application.
-
-**Use Lovable**
-
-Simply visit the [Lovable Project](https://lovable.dev/projects/a551626d-1ed4-4b4d-b46a-679bf6df99cc) and start prompting.
-
-Changes made via Lovable will be committed automatically to this repo.
-
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+### 1. Install Python Dependencies
+```bash
+pip install fastapi uvicorn python-dotenv google-generativeai sentence-transformers vaderSentiment scikit-learn xgboost nltk joblib pandas numpy
 ```
 
-**Edit a file directly in GitHub**
+### 2. Download NLTK Data
+```python
+python -c "import nltk; nltk.download('punkt'); nltk.download('averaged_perceptron_tagger'); nltk.download('stopwords')"
+```
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+### 3. Setup Environment Variables
+Create a `.env` file in the backend directory:
+```bash
+cp .env.example .env
+```
 
-**Use GitHub Codespaces**
+Edit `.env` and add your Gemini API key:
+```
+GEMINI_API_KEY=your_actual_api_key
+```
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+Get a free API key from: https://makersuite.google.com/app/apikey
 
-## What technologies are used for this project?
+### 4. Prepare Model Files
+Create a `model` directory and place your trained models:
+```
+backend/
+├── model/
+│   ├── Big_5_final.json
+│   ├── lda_model.joblib
+│   └── lda_vec.joblib
+```
 
-This project is built with:
+If you need to recreate the LDA models, run:
+```bash
+python fix_lda_vectorizer_final.py
+```
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+### 5. Run the Backend
+```bash
+cd backend
+python app.py
+```
 
-## How can I deploy this project?
+Or using uvicorn:
+```bash
+uvicorn app:app --reload --port 8000
+```
 
-Simply open [Lovable](https://lovable.dev/projects/a551626d-1ed4-4b4d-b46a-679bf6df99cc) and click on Share -> Publish.
+The API will be available at: http://localhost:8000
 
-## Can I connect a custom domain to my Lovable project?
+### API Endpoints
 
-Yes, you can!
+**POST /predict**
+- Request: `{"comments": ["text1", "text2", ...], "include_summary": true}`
+- Response: `{"scores": {...}, "interpretations": {...}, "summary": {...}, "success": true}`
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+**GET /**
+- Health check endpoint
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+## Frontend Integration
+
+The frontend expects the backend to run on `http://localhost:8000`
+
+Make sure to start the backend before using the frontend!
